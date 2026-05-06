@@ -1,0 +1,10 @@
+name,label,description,best_epoch,best_validation_mean_dsc,evaluation_median_dsc,optimizer,scheduler,loss,lr,weight_decay,batch_norm,bilinear,dropout,aug_scale,aug_angle
+baseline,Baseline,Standard U-Net with Dice loss and Adam.,19,0.7991738684335252,0.9018053133107005,adam,none,dice,0.0003,0.0,False,False,0.0,0.05,15.0
+bn,Baseline + BatchNorm,Enable batch normalization in convolution blocks.,8,0.8881511254642221,0.8960011808998886,adam,none,dice,0.0003,0.0,True,False,0.0,0.05,15.0
+bilinear,Baseline + Bilinear,Use bilinear upsampling in the decoder.,17,0.8027398806405139,0.9074023252667787,adam,none,dice,0.0003,0.0,False,True,0.0,0.05,15.0
+dropout,Baseline + Dropout,Add dropout to deeper encoder/decoder blocks.,17,0.7973064286312033,0.9024847574051234,adam,none,dice,0.0003,0.0,False,False,0.1,0.05,15.0
+bce_dice,Baseline + BCE+Dice,Replace Dice loss with combined BCE and Dice loss.,19,0.9051817222467851,0.9215785338284272,adam,none,bce_dice,0.0003,0.0,False,False,0.0,0.05,15.0
+adamw,Baseline + AdamW,Replace Adam with AdamW and add mild weight decay.,19,0.8037612912236861,0.9120717202445673,adamw,none,dice,0.0003,0.0001,False,False,0.0,0.05,15.0
+cosine,Baseline + Cosine Scheduler,Add cosine annealing learning-rate scheduling.,17,0.7914166993749965,0.8871927382692985,adam,cosine,dice,0.0003,0.0,False,False,0.0,0.05,15.0
+strong_aug,Baseline + Stronger Aug,Increase scale and rotation augmentation strength.,5,0.7847292687224889,0.8791663019949856,adam,none,dice,0.0003,0.0,False,False,0.0,0.1,20.0
+improved,All Improvements,"Combine batch norm, bilinear upsampling, dropout, BCE+Dice, AdamW, cosine scheduling, and stronger augmentation.",19,0.8097905583602663,0.9141485581079092,adamw,cosine,bce_dice,0.001,0.0001,True,True,0.1,0.1,20.0

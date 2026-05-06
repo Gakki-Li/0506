@@ -1,0 +1,6 @@
+medpy
+scikit-image==0.19.3
+pillow
+tqdm
+matplotlib
+tensorboard

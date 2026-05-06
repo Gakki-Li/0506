@@ -2,8 +2,8 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PYTHON_BIN="${PYTHON_BIN:-python}"
-IMAGES_DIR="${IMAGES_DIR:-$SCRIPT_DIR/../../BrainMRI/kaggle_3m}"
+PYTHON_BIN="${PYTHON_BIN:-python3}"
+IMAGES_DIR="${IMAGES_DIR:-/opt/tiger/alpha-seed/0506_dwn/brain-seg/kaggle_3m}"
 OUTPUT_ROOT="${OUTPUT_ROOT:-$SCRIPT_DIR/outputs}"
 IMAGE_SIZE="${IMAGE_SIZE:-256}"
 EPOCHS="${EPOCHS:-20}"

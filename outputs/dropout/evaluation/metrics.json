@@ -1,0 +1,7 @@
+{
+  "best_checkpoint_epoch": 17,
+  "best_validation_mean_dsc": 0.7973064286312033,
+  "evaluation_mean_dsc": 0.7973064286312033,
+  "evaluation_median_dsc": 0.9024847574051234,
+  "num_validation_patients": 10
+}

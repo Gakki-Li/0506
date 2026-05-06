@@ -1,27 +1,19 @@
 import numpy as np
+
+if "bool" not in np.__dict__:
+    np.bool = np.bool_
+
 from medpy.filter.binary import largest_connected_component
-from PIL import Image
 from skimage.exposure import rescale_intensity
+from skimage.transform import resize
 
 
 def dsc(y_pred, y_true, lcc=True):
-    y_pred = np.asarray(y_pred)
-    y_true = np.asarray(y_true)
-    if y_pred.ndim == 4 and y_pred.shape[1] == 1:
-        y_pred = y_pred[:, 0]
-    if y_true.ndim == 4 and y_true.shape[1] == 1:
-        y_true = y_true[:, 0]
     if lcc and np.any(y_pred):
         y_pred = np.round(y_pred).astype(int)
         y_true = np.round(y_true).astype(int)
-        try:
-            y_pred = largest_connected_component(y_pred)
-        except ValueError:
-            y_pred = np.zeros_like(y_pred)
-    denominator = np.sum(y_pred) + np.sum(y_true)
-    if denominator == 0:
-        return 1.0
-    return np.sum(y_pred[y_true == 1]) * 2.0 / denominator
+        y_pred = largest_connected_component(y_pred)
+    return np.sum(y_pred[y_true == 1]) * 2.0 / (np.sum(y_pred) + np.sum(y_true))
 
 
 def crop_sample(x):
@@ -69,19 +61,24 @@ def resize_sample(x, size=256):
     if v_shape[:3] == out_shape:
         return volume, mask
 
-    volume_resized = []
-    mask_resized = []
-    for slice_index in range(v_shape[0]):
-        volume_slice = Image.fromarray(volume[slice_index].astype(np.uint8))
-        mask_slice = Image.fromarray(mask[slice_index].astype(np.uint8))
-        volume_resized.append(
-            np.asarray(volume_slice.resize((size, size), resample=Image.BILINEAR))
-        )
-        mask_resized.append(
-            np.asarray(mask_slice.resize((size, size), resample=Image.NEAREST))
-        )
-
-    return np.stack(volume_resized, axis=0), np.stack(mask_resized, axis=0)
+    mask = resize(
+        mask,
+        output_shape=out_shape,
+        order=0,
+        mode="constant",
+        cval=0,
+        anti_aliasing=False,
+    )
+    out_shape = out_shape + (v_shape[3],)
+    volume = resize(
+        volume,
+        output_shape=out_shape,
+        order=2,
+        mode="constant",
+        cval=0,
+        anti_aliasing=False,
+    )
+    return volume, mask
 
 
 def normalize_volume(volume):
@@ -90,7 +87,6 @@ def normalize_volume(volume):
     volume = rescale_intensity(volume, in_range=(p10, p99))
     m = np.mean(volume, axis=(0, 1, 2))
     s = np.std(volume, axis=(0, 1, 2))
-    s[s == 0] = 1.0
     volume = (volume - m) / s
     return volume
 
@@ -126,6 +122,7 @@ def outline(image, mask, color):
         if 0.0 < np.mean(mask[max(0, y - 1) : y + 2, max(0, x - 1) : x + 2]) < 1.0:
             image[max(0, y) : y + 1, max(0, x) : x + 1] = color
     return image
+
 
 
 def seed_everything(seed):

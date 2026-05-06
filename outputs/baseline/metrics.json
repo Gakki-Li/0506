@@ -1,0 +1,8 @@
+{
+  "experiment_name": "baseline",
+  "best_epoch": 19,
+  "best_validation_mean_dsc": 0.7991738684335252,
+  "device": "cuda:0",
+  "images": "/opt/tiger/alpha-seed/0506_dwn/brain-seg/kaggle_3m",
+  "weights": "/opt/tiger/alpha-seed/0506/outputs/baseline/weights/best.pt"
+}
